@@ -1,6 +1,7 @@
-
 # Module 1: Introduction to Go (60 minutes)
 **Learning Objective: By the end of this module, learners should be able to set up the Go development environment and understand the basics of Go syntax and structure.**
+
+---
 
 ## Part 1: Setting Up Go Development Environment (10 minutes)
 
@@ -30,6 +31,7 @@ The best way to interact with the Go tooling is through the command line. The Go
 ** make sure we know how to update go version and to check the path**
 
 if you have tried installing Go via various methods, it is possible that you have multiple versions of Go installed on your system. To check the version of Go you are using, run the following command:
+
 ```bash
     which go -a
 ```
@@ -38,12 +40,14 @@ If you have multiple versions of Go installed, you can switch between them by se
 
 **GOPATH and GOROOT**
     
-     `GOPATH` is an environment variable that specifies the location of your Go binaries and dependencies are stored. By default, the Go workspace is located at `$HOME/go` on Unix-based systems and `%USERPROFILE%\go` on Windows. You can change the location of the workspace by setting the `GOPATH` environment variable. For a cleaner setup, I recommend setting the `GOPATH` to a directory of your choice in your bash profile or zshrc file.
+`GOPATH` is an environment variable that specifies the location of your Go binaries and dependencies are stored. By default, the Go workspace is located at `$HOME/go` on Unix-based systems and `%USERPROFILE%\go` on Windows. You can change the location of the workspace by setting the `GOPATH` environment variable. For a cleaner setup, I recommend setting the `GOPATH` to a directory of your choice in your bash profile or zshrc file.
 
-    `GOROOT` is an environment variable that specifies the location where the Go binary is installed on your system. This is set automatically when you install Go, and you don't need to change it unless you have multiple versions of Go installed. [reference](https://go.dev/wiki/InstallTroubleshooting#goroot-vs-gopath). To check the value of `GOROOT`, run the following command:
+`GOROOT` is an environment variable that specifies the location where the Go binary is installed on your system. This is set automatically when you install Go, and you don't need to change it unless you have multiple versions of Go installed. [reference](https://go.dev/wiki/InstallTroubleshooting#goroot-vs-gopath). To check the value of `GOROOT`, run the following command:
+
 ```bash
 go env
 ```
+
 ### Setup Your First Go Project
 To create a new Go project, you need to create a new directory in your workspace and initialize it as a Go module. A Go module is a collection of Go packages that are versioned together. To create a new Go module, run the following command in your project directory:
 
@@ -58,7 +62,7 @@ go mod init github.com/Soypete/myproject
 
 The next step is to run the command `go mod tidy` to download the dependencies for your project. Now you can validate that your project was setup as a go module by accessing the `go.mod` file. For an empty go project it should look like this:
 
-[]() # add image of go.mod file
+[]() <!--- add image of go.mod file -->
 
 Here is a project with a many dependencies [project]()
 
@@ -87,35 +91,39 @@ go run main.go
 
 You have now built your first Go program!
 
-
 ### Workspaces
 If you have a project wiht many contributors, many modules, or is a monorepo, you should consider looking at [workspaces](https://go.dev/doc/tutorial/workspace](https://go.dev/doc/tutorial/workspaces)
 
 ## Part 2: Go Program Structure (15 minutes)
-    - Understanding Go file structure
-        - `main` package and `main` function
+### Understanding Go file structure
+<!-- The add a go repo file structure image here -->
+
+The executable Go programs are made up of packages. A package is a collection of Go source files that are compiled together. Each package has a unique name, and the name of the package is the same as the name of the directory that contains the package source files. The `main` package is a special package that contains the `main` function, which is the entry point of the program. The main file can me named anything, but it is common to name it `main.go`. When compiling a Go program, the `main.go` file becomes a `main` binary file that can be executed on your system. 
+
+
         - Modules, imports, and workspaces
-    - Writing and running your first Go program
+### Writing and running your first Go program
         - Create a simple `hello.go` program
         - Run the program using `go run hello.go`
         - Explain the output and the `main` function
-    - Go tooling: `go build`, `go install`, `go fmt`, `go vet`, `go get`
+### Go tooling: `go build`, `go install`, `go fmt`, `go vet`, `go get`
         - explain the go build main.go vs go build .
-- Part 3: Basic Syntax and Variables (15 minutes)
-    - Variable declaration
+
+## Part 3: Basic Syntax and Variables (15 minutes)
+### Variable declaration
         - `var`, `const`, `:=`
         - Naming conventions
         - scope of variables and memory sharing
-    - Basic data types
+### Basic data types
         - `int`, `float`, `string`, `bool`
         - Type inference
         - Zero values
         - custom types
         - generics
-    - Basics of pointers in Go
+### Basics of pointers in Go
         - `&` and `*` operators
         - Passing by value vs. passing by reference
-- Part 4: Functions in Go (10 minutes)
-    - Defining and calling functions
+## Part 4: Functions in Go (10 minutes)
+### Defining and calling functions
         - method vs function
-    - functions as a type
+### functions as a type
