@@ -243,6 +243,8 @@ Since Go 1.19 generics have been generally available. Generics in Go are used as
 
 Pointers are byte addresses to where a value is stored. Pointers are the best way to update a value across functions. `*` is the pointer dereference. This let's us know that they type is defined as a pointer. The `&` is a reference. It allows you to pass a type as it's pointer.
 
+Pointers have a binary state but a variable value. Pointer are either allocated or nil. Anytime a pointer is called, but not allocated you will get a nil pointer dereference error. This is a runtime err
+
 ## Part 4: Functions in Go (10 minutes)
 
 ### Defining and calling functions
