@@ -8,11 +8,20 @@
 **Install via website: https://golang.org/dl/**
 We are glad you chose to learn Go. In this section, we will guide you through the installation process of Go on your system. Go is distributed as a binary package, and you can download the installer from the official Go website. This is the recomended way to install Go on your system if you are unfamiliar with package managers.
 [Download Go](https://golang.org/dl/)
-Add image of the download page with the download button highlighted - Click on the download button to download the installer for your operating system. - Run the installer and follow the on-screen instructions to install Go on your system.
+
+<!-- Add image of the download page with the download button highlighted -->
+
+* Click on the download button to download the installer for your operating system.
+* Run the installer and follow the on-screen instructions to install Go on your system.
 
 ** install via package manager**
 Unix-based systems like Linux and macOS have package managers that can be used to install Go. If you are using a package manager like Homebrew on macOS, you can install Go using the following command:
-`bash brew install go`
+
+```
+$ apt-get install go
+* brew install go
+```
+
 This will download and install Go on your system.
 
 ** install via webi **
@@ -33,6 +42,20 @@ if you have tried installing Go via various methods, it is possible that you hav
 ```
 
 If you have multiple versions of Go installed, you can switch between them by setting the `GOROOT` environment variable to the path of the Go version you want to use, or just simply delete the version you don't want to use.
+
+#### The Go CLI
+
+The Go CLI is a powerful tool that allows you to manage your Go projects, build and run your code, and manage dependencies. To learn more about the Go CLI, run the following command:
+
+```bash
+go help
+```
+
+This will display a list of available commands and their descriptions. You can run `go help <command>` to get more information about a specific command.
+
+The most common commands you will use are `go build`, `go run`, and `go test`. The `go build` command is used to compile your Go program. The `go run` command is used to compile and run your Go program. The `go test` command is used to run tests for your Go program. `go build` and `go test` are commonly used in CI/CD pipelines to build and test your Go programs.
+
+We will go through some of the other commands in the next section.
 
 **GOPATH and GOROOT**
 
@@ -104,6 +127,14 @@ You have now built your first Go program!
 
 If you have a project wiht many contributors, many modules, or is a monorepo, you should consider looking at [workspaces](https://go.dev/doc/tutorial/workspace](https://go.dev/doc/tutorial/workspaces)
 
+Workspaces allow you to manage depency changes across repo with multiple modules. This is a great way to manage internal and external dependencies.
+
+to create a workspace use the command
+
+```bash
+go work init {module-path}
+```
+
 ## Part 2: Go Program Structure (15 minutes)
 
 ### Understanding Go file structure
@@ -123,6 +154,14 @@ The module name is the name of the module that the file belongs to. This is used
 ```go
 package main
 ```
+
+you can use the go doc tool to see the documentation for a module. This is a great way to see the documentation for a module and see what functions are available in the module.
+
+```bash
+go doc
+```
+
+https://pkg.go.dev/github.com/soypete/Meetup-Go-Graphql-Scraper@v0.1.1/auth
 
 If you want to import an external module, you can do so by using the `import` keyword followed by the module path. This is a common cli package that is used to parse command line arguments.
 
@@ -146,7 +185,7 @@ import "fmt"
 
 The `go mod` command is used to manage Go modules. To import modules you first need to setup your project as a go module. This is done by running the `go mod init` command.
 
-```go
+```bash
 go mod init github.com/Soypete/{myproject}
 ```
 
@@ -159,11 +198,6 @@ Modules is go contain all the logic needed to run a specific task or set of task
 ├── auth
 │   ├── auth.go
 │   └── kolla.go
-├── csv
-│   ├── event_RSVP.csv
-│   ├── meetup_groups.csv
-│   ├── meetup_groups_analytics.csv
-│   └── meetup_users.csv
 ├── meetup
 │   ├── analytics.go
 │   ├── api.go
@@ -203,20 +237,26 @@ The most common commands you will use are `go build`, `go run`, and `go test`. T
 
 ### Variable declaration
 
-In go there 2 ways to store variables in memory. `var` is for variatic values. Values that have the potential to changs. `const` is for variables that are never going to change after created. Typically `const` values are global to their respecive module. If a `const` is declared in the `main` mondule it can only be access in the `main` module, but all other const values can be access outside their values if they are exported (capitalized) but including their modules import statement. the type can be specified with out a value when you use the `var` and `const` keywords. If you use the `:=` expression the type is always infered. (I think we can detect type)
+In go there 2 ways to store variables in memory. `var` is for variatic values. Values that have the potential to change. `const` is for variables that are never going to change after created. Typically `const` values are global to their respecive module. If a `const` is declared in the `main` mondule it can only be access in the `main` module, but all other const values can be access outside their values if they are exported (capitalized) but including their modules import statement. The type can be specified with out a value when you use the `var` and `const` keywords. If you use the `:=` expression the type is always infered. (I think we can detect type)
 
 In Go, you can declare the type or let the type be inferred by (reflection)[]. Go is a staticly typed language, so once the variable type is set by the compiler, it cannot be changed.
 
 ```go
-<!-- declare some varuables using const, var and := -->
+const githubPath = "github.com/Soypete"
+const Repo = "learning-go"
+
+var name string = "Pete"
+var age int = 30
+var isCool bool = true
+height := 6.2
 ```
 
-(CamelCase)[] is the typical convention used when the naming things in Go. Names in Go are typically short, but descriptive. Interface names should be actions like `Reader` or `Writer`. Names should not be stuttery on import, for example the package `client` should not have a struct type client because then import your be `client.Client`. It would be better to be specific with the package name specifing the type of client in the package name so the import would be `http.Client` or `grpc.Client`.
+(CamelCase)[https://en.wikipedia.org/wiki/Camel_case] is the typical convention used when the naming things in Go. Names in Go are typically short, but descriptive. Interface names should be actions like `Reader` or `Writer`. Names should not be stuttery on import, for example the package `client` should not have a struct type client because then import your be `client.Client`. It would be better to be specific with the package name specifing the type of client in the package name so the import would be `http.Client` or `grpc.Client`.
 
 In opensource go code, you name see a lot of single letter name variables. The best practice for this is a practice of scoping. If is ok tp use a single name variable in a `for` loop or a `select` statement because the scope is localized and it is only extended a few lines. It is also common to see single letter variables names as the method delimiter.
 if a single name variable used in one methods it should be used across all methods for readability.
 
-Code should be selt documenting. In go, go docs are generated by default for all exported variables. Including descriptiptive docstrings and package descriptions are a great way to keep code self documenting. The other ways it to use clear variable names that should what data is being used and what is being acted upon.
+Code should be self documenting. In go, go docs are generated by default for all exported variables. Including descriptiptive docstrings and package descriptions are a great way to keep code self documenting. The other ways it to use clear variable names that should what data is being used and what is being acted upon.
 
 Variables are scoped to the functions, loops, and packages that they are defined in. If you want to share data outside of it's scope it needs to be passed as a paramenter in a function ot shared across a go channel.
 
@@ -224,20 +264,76 @@ Variables are scoped to the functions, loops, and packages that they are defined
 
 ### Basic data types
 
-In Go, everything can be thought of as a type. We will start with the promitive types and then move on to custom types.
+In Go, everything can be thought of as a type. We will start with the primitive types and then move on to custom types.
 
-<!-- Insert here types and their best uses. -->  
+from [go docs](https://go.dev/ref/spec#Types)
 
-        - `int`, `float`, `string`, `bool`
-        - custom types
-        - Zero values
-        - Type inference
+```
+uint8       the set of all unsigned  8-bit integers (0 to 255)
+uint16      the set of all unsigned 16-bit integers (0 to 65535)
+uint32      the set of all unsigned 32-bit integers (0 to 4294967295)
+uint64      the set of all unsigned 64-bit integers (0 to 18446744073709551615)
 
-We talked about type inference in regards to reflection determining a data type at compile time. They are a couple of other times when the type is infered that matter. The first one that comes to mind is in the json package. Here you are required to provide a pointer to a type into the `any` value. The `Unmarshaler` inferences the type from the value and makes sure it matches the type provided. - generics
+int8        the set of all signed  8-bit integers (-128 to 127)
+int16       the set of all signed 16-bit integers (-32768 to 32767)
+int32       the set of all signed 32-bit integers (-2147483648 to 2147483647)
+int64       the set of all signed 64-bit integers (-9223372036854775808 to 9223372036854775807)
 
-Since Go 1.19 generics have been generally available. Generics in Go are used as a way to expend a functions usabliity across similar types.
+float32     the set of all IEEE 754 32-bit floating-point numbers
+float64     the set of all IEEE 754 64-bit floating-point numbers
 
-<!-- add example and describe the example. pull from generics talk -->
+complex64   the set of all complex numbers with float32 real and imaginary parts
+complex128  the set of all complex numbers with float64 real and imaginary parts
+
+byte        alias for uint8
+rune        alias for int32
+uint        either 32 or 64 bits
+int         same size as uint
+
+bool       true or false
+```
+
+These types always contain a value in the allocated memory. If you do not set the value at allocation time, that value is set to zero.
+
+Complex types are a combination of one or more types. These are strings, maps, structs, slices, and arrays. A slice is a grouping of many variables of the same type. It has a backing array where the data is stored. A struct is an object that is comprised of many types. A map is key-value store. The key and value can be of any type. Functions are also type in go, they can be passed as parameters and returned as functions. This allows for a more functional style approach to programming.
+
+Custom types are a way to define type inheretance. A good example of this is the `time.Duration` type in the standard langauge. This is a type that is a `int64` but has a specific set of methods that can be called on it. This way it can have interfaces that are applied to it to enforce behavior. Using custom types allows your code to be more readable and maintainable. It also allows for more complex logic to be applied to the type.
+
+There are times when a type will not be known before runtime. In these cases we have the tools like reflection, `any` and generics. The `any` type is an placeholder type that can be used to store any type. This is useful when you don't know the type of the data that you are going to be storing. The `any` type is used in the `json` package to store the data that is being unmarshalled. You have to pass in the pointer to the type as your parameter and then the type is infered via reflection.
+
+Before generics, you would have to write a function for each type that you wanted to sum. In this example we are talking the sum of all these numeric values in a map. We can do this on a number of different static types so it makes sense to implement on one function that can run on all these numeric types.
+
+```go
+func SumInts(m map[string]int64) int64 {
+    var s int64
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+
+func SumFloats(m map[string]float64) float64 {
+    var s float64
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+```
+
+With generics you can write a single function that can sum any type that satisfies a set of constraints. The `comparable` keyword is a constraint that is used to make sure that the type can be compared with the `==`, and `!=` operators. So any type that is comparable can be used as `K`. In this function we are only using `int64` and `float64` used as `V`. Make sure that if you choose to you generics make sure you continue to understand their implementation and some of the memory constraints.
+
+```go
+// SumIntsOrFloats sums the values of map m. It supports both int64 and float64
+// as types for map values.
+func SumIntsOrFloats[K comparable, V int64 | float64](m map[K]V) V {
+    var s V
+    for _, v := range m {
+        s += v
+    }
+    return s
+}
+```
 
 ### Basics of pointers in Go
 
@@ -251,6 +347,43 @@ Pointers have a binary state but a variable value. Pointer are either allocated 
 
 A function in Go is all the logic contained with in the `{}` following the `func` keyword. A method is a function that is called on a struct object. Methods can be used to satisfy an interface. Interfaces is Go are a set of methods that define a perscribed set of generic functionality. For example, the `Reader` interface has a `Read()` method. Any type that implements this interface must also implement their own `Read()` function. This is a great way to enforce behavior in go and allows for engineers to add custom logic for more complex use cases. - method vs function
 
+```go
+type MyError struct {
+    When time.Time
+    What string
+}
+
+func FormatError(e MyError) string {
+	return fmt.Sprintf("at %v, %s",
+		e.When, e.What)
+}
+
+func (e *MyError) Error() string {
+	return fmt.Sprintf("at %v, %s",
+		e.When, e.What)
+}
+```
+
 ### functions as a type
 
 Functions are types in Go. This means you can pass functions around as types, define functions anonymously, and allow for generic use cases by allowing functions to be passed. Go is not a strictly Object Oriented, niether is it a strictly functional language. My mixing the two, you get really dynamic functionality in your go programs and can tackle complex problems.
+
+```go
+handler := func(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+}
+
+http.HandleFunc("/", handler)
+http.ListenAndServe(":8080", nil)
+```
+
+### Anonymous functions
+
+we can define the above function as a anonymous function. This is a function that is defined without a name. This is useful when you want to pass a function as a parameter to another function. This is a common pattern in go and is used in the `http` package to define the handler for a route.
+
+```go
+http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+})
+
+```

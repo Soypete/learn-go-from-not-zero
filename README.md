@@ -30,3 +30,7 @@
 - Part 1: Introduction to CLI Applications
 - Part 2: Building the CLI Application
 - Part 3: Packaging and Distributing the CLI Application
+
+code examles each module are nested in the respective folders. 
+
+The cli/ folder contains the code for the CLI application built for the live coding session included in the O'Reilly course.
