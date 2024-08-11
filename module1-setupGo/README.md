@@ -8,11 +8,20 @@
 **Install via website: https://golang.org/dl/**
 We are glad you chose to learn Go. In this section, we will guide you through the installation process of Go on your system. Go is distributed as a binary package, and you can download the installer from the official Go website. This is the recomended way to install Go on your system if you are unfamiliar with package managers.
 [Download Go](https://golang.org/dl/)
-Add image of the download page with the download button highlighted - Click on the download button to download the installer for your operating system. - Run the installer and follow the on-screen instructions to install Go on your system.
+
+<!-- Add image of the download page with the download button highlighted -->
+
+* Click on the download button to download the installer for your operating system.
+* Run the installer and follow the on-screen instructions to install Go on your system.
 
 ** install via package manager**
 Unix-based systems like Linux and macOS have package managers that can be used to install Go. If you are using a package manager like Homebrew on macOS, you can install Go using the following command:
-`bash brew install go`
+
+```
+$ apt-get install go
+* brew install go
+```
+
 This will download and install Go on your system.
 
 ** install via webi **

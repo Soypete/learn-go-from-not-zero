@@ -1,10 +1,10 @@
 # Module 4: Testing Go Programs (30 minutes)
-**Learning Objective: By the end of this module, learners should be able to write and execute tests in Go, use table tests, measure test coverage, and understand the basics of the Go testing framework.**
----
+
+## **Learning Objective: By the end of this module, learners should be able to write and execute tests in Go, use table tests, measure test coverage, and understand the basics of the Go testing framework.**
 
 ## Part 1: Introduction to Testing in Go (10 minutes)
 
-Testing is an essential part of software development. Go has a  testing package built into the Standard Library. This is the defacto testing framework for unit tests, integration tests, and benchmarking. In Go, tests are written in the same package as the code they are testing, and test files are named `*_test.go`.
+Testing is an essential part of software development. Go has a testing package built into the Standard Library. This is the defacto testing framework for unit tests, integration tests, and benchmarking. In Go, tests are written in the same package as the code they are testing, and test files are named `*_test.go`.
 
 ### Writing a Test
 
@@ -79,16 +79,28 @@ This can be useful to identify areas of your code that are not covered by tests.
 
 There are two other types in the `testing` package: benchmarks and Main. Benchmarks are used to measure the performance of your code. They are written in the same way as tests but the type `*testing.B` is passed to the benchmark function. Main tests are user-defined tests that can be run using the `go test` command against a `main()` function.
 
-I have never use the `Main` tests, but I have used benchmarks. Here is an example of a benchmark from the davecheney fibonaci example. This is the function that calculates the nth fibonaci number:
+<---I still don't know what main tests do--->
+
+I have never use the `Main` tests, but I have used benchmarks. Here is an example of a benchmark from the [davecheney fibonaci example](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go). This is the function that calculates the nth fibonaci number:
 
 ```go
-
+func Fib(n int) int {
+        if n < 2 {
+                return n
+        }
+        return Fib(n-1) + Fib(n-2)
+}
 ```
 
 This is the benchmark for that function:
 
 ```go
-
+func BenchmarkFib10(b *testing.B) {
+        // run the Fib function b.N times
+        for n := 0; n < b.N; n++ {
+                Fib(10)
+        }
+}
 ```
 
 You can run it with this flag:

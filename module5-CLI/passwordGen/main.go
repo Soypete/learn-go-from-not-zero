@@ -9,6 +9,7 @@ import (
 var requiredChars string
 var length int
 
+// go run main.go -required "&$*" -length 8
 func main() {
 	flag.StringVar(&requiredChars, "required", "&$*", "Required characters")
 	flag.IntVar(&length, "length", 8, "Length of the password")
