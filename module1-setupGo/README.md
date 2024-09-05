@@ -295,29 +295,13 @@ bool       true or false
 
 These types always contain a value in the allocated memory. If you do not set the value at allocation time, that value is set to zero.
 
-Complex types are a combination of one or more types. These are strings, maps, structs, slices, and arrays. A slice is a grouping of many variables of the same type. It has a backing array where the data is stored. A struct is an object that is comprised of many types. A map is key-value store. The key and value can be of any type. Functions are also type in go, they can be passed as parameters and returned as functions.
+Complex types are a combination of one or more types. These are strings, maps, structs, slices, and arrays. A slice is a grouping of many variables of the same type. It has a backing array where the data is stored. A struct is an object that is comprised of many types. A map is key-value store. The key and value can be of any type. Functions are also type in go, they can be passed as parameters and returned as functions. This allows for a more functional style approach to programming.
 
-Custom types are a way to define type inheretance. A good example of this is the [`time.Duration` type](https://cs.opensource.google/go/go/+/go1.23.0:src/time/time.go;l=632) in the standard langauge. This is a type that is a `int64` but has a specific set of methods that can be called on it. This way it can have interfaces that are applied to it to enforce behavior. Using custom types allows your code to be more readable and maintainable. It also allows for more complex logic to be applied to the type.
+Custom types are a way to define type inheretance. A good example of this is the `time.Duration` type in the standard langauge. This is a type that is a `int64` but has a specific set of methods that can be called on it. This way it can have interfaces that are applied to it to enforce behavior. Using custom types allows your code to be more readable and maintainable. It also allows for more complex logic to be applied to the type.
 
-```go
-// Copyright 2009 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+There are times when a type will not be known before runtime. In these cases we have the tools like reflection, `any` and generics. The `any` type is an placeholder type that can be used to store any type. This is useful when you don't know the type of the data that you are going to be storing. The `any` type is used in the `json` package to store the data that is being unmarshalled. You have to pass in the pointer to the type as your parameter and then the type is infered via reflection.
 
-type Duration int64
-
-func (d Duration) String() string {
-	// This is inlinable to take advantage of "function outlining".
-	// Thus, the caller can decide whether a string must be heap allocated.
-	var arr [32]byte
-	n := d.format(&arr)
-	return string(arr[n:])
-}
-```
-
-We talked about type inference in regards to reflection determining a data type at compile time. They are a couple of other times when the type is infered that matter. The first one that comes to mind is in the json package. Here you are required to provide a pointer to a type into the `any` value. The `Unmarshaler` inferences the type from the value and makes sure it matches the type provided.
-
-Since Go 1.19 generics have been generally available. Generics in Go are used as a way to expend a functions usabliity across similar types. This example is from their docs, but it is a great example of how generics reduce code duplication.
+Before generics, you would have to write a function for each type that you wanted to sum. In this example we are talking the sum of all these numeric values in a map. We can do this on a number of different static types so it makes sense to implement on one function that can run on all these numeric types.
 
 ```go
 func SumInts(m map[string]int64) int64 {
@@ -337,7 +321,7 @@ func SumFloats(m map[string]float64) float64 {
 }
 ```
 
-Before generics, you would have to write a function for each type that you wanted to sum. With generics you can write a single function that can sum any type that satisfies the constraints. The `comparable` keyword is a constraint that is used to make sure that the type can be compared with the `<`, `>`, `==`, and `!=` operators. So any type that is comparable can be used as `K`. Only `int64` and `float64` can be used as `V`.
+With generics you can write a single function that can sum any type that satisfies a set of constraints. The `comparable` keyword is a constraint that is used to make sure that the type can be compared with the `==`, and `!=` operators. So any type that is comparable can be used as `K`. In this function we are only using `int64` and `float64` used as `V`. Make sure that if you choose to you generics make sure you continue to understand their implementation and some of the memory constraints.
 
 ```go
 // SumIntsOrFloats sums the values of map m. It supports both int64 and float64
@@ -363,6 +347,43 @@ Pointers have a binary state but a variable value. Pointer are either allocated 
 
 A function in Go is all the logic contained with in the `{}` following the `func` keyword. A method is a function that is called on a struct object. Methods can be used to satisfy an interface. Interfaces is Go are a set of methods that define a perscribed set of generic functionality. For example, the `Reader` interface has a `Read()` method. Any type that implements this interface must also implement their own `Read()` function. This is a great way to enforce behavior in go and allows for engineers to add custom logic for more complex use cases. - method vs function
 
+```go
+type MyError struct {
+    When time.Time
+    What string
+}
+
+func FormatError(e MyError) string {
+	return fmt.Sprintf("at %v, %s",
+		e.When, e.What)
+}
+
+func (e *MyError) Error() string {
+	return fmt.Sprintf("at %v, %s",
+		e.When, e.What)
+}
+```
+
 ### functions as a type
 
 Functions are types in Go. This means you can pass functions around as types, define functions anonymously, and allow for generic use cases by allowing functions to be passed. Go is not a strictly Object Oriented, niether is it a strictly functional language. My mixing the two, you get really dynamic functionality in your go programs and can tackle complex problems.
+
+```go
+handler := func(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+}
+
+http.HandleFunc("/", handler)
+http.ListenAndServe(":8080", nil)
+```
+
+### Anonymous functions
+
+we can define the above function as a anonymous function. This is a function that is defined without a name. This is useful when you want to pass a function as a parameter to another function. This is a common pattern in go and is used in the `http` package to define the handler for a route.
+
+```go
+http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+})
+
+```
