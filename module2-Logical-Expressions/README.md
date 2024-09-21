@@ -25,15 +25,74 @@ The comparision operators are most often used in `if` or `switch` statements to 
 
 If you want to increment a variable by one, you can use the `++` operator. If you want to decrement a variable by one, you can use the `--` operator. You can also use the `+=` operator to increment a variable by a specific value.
 
+```go
+for i := 0; i < 10; i++ {
+    fmt.Println(i)
+}
+
+for i := 0; i < 10; i += 2 {
+    fmt.Println(i)
+}
+
+for i := 10; i > 0; i-- {
+    fmt.Println(i)
+}
+```
+
 These operators are used in loops to control the flow of the program.
 
 ## Part 2: Control Structures (10 minutes)
 
+`If` statements are super common to go. They are basic statements that control the execution of a program. The most common `if` statement you will see in Go is used to check for errors.
+
+```go
+
+if err != nil {
+    return fmt.Errorf("custom message:  %w", err)
+}
+
+```
+
 In Go, you can define an `if` statement without the else. That means, that if you have some two options and one is the default behavior you can put the optional behavior behind a single if statement.
 
-<!-- This would be an idea place for code. -->
+```go
+func makePayloadql(isGroup, isfirst bool, lastCursor, urlname string, numPerPage int) payloadql {
+	variableTypes := "$urlname: String!, $itemsNum: Int!"
+	if !isfirst {
+		variableTypes = variableTypes + ", $cursor: String!"
+	}
+	searchType := `eventsSearch`
+	nodeQuery := `title group { id name } dateTime going waiting`
+	if isGroup {
+		searchType = `groupsSearch`
+		nodeQuery = `name`
+	}
+
+	input, variables := getInputandVariables(isfirst, lastCursor, urlname, numPerPage)
+	query := fmt.Sprintf(queryTemplate, variableTypes, searchType, input, nodeQuery)
+	p := payloadql{
+		Query:     query,
+		Variables: variables,
+	}
+	return p
+}
+```
+
+if the example above we have different behavior based on the value of `isGroup` and `isFirst`. Here we are making graphql payloads. If `isFirst` is false, we want to include the cursor in the query. If `isGroup` is true, we want to we want to set the parameters to search for groups.
 
 If there are more that two options for behavior instead of using the keyword `else if`, engineers will typically use the `switch` keyword with and provided conditional `cases`.
+
+```go
+    t := time.Now()
+    switch {
+    case t.Hour() < 12:
+        fmt.Println("It's before noon")
+    default:
+        fmt.Println("It's after noon")
+    }
+```
+
+This example is from [Go by example](https://gobyexample.com/switch). It using a switch to determine what string to print based on the time of day. the `default` case is used when none of the other cases are met. If you don't include a `default` case, the switch becomes a blocking call and will not continue executing the code after the switch.
 
 ## Part 3: Looping Constructs (10 minutes)
 
@@ -160,8 +219,25 @@ for i := 0; i < 10; i++ {
 }
 ```
 
-Coming in Go 1.24 is the option to range over a function. This a more complex generic pattern that can be very powerful, but doesn't have many practical use cases.
+Coming in Go 1.23 is the option to range over a function. This a more complex generic pattern that can be very powerful, but the clearest use case is to create [iterators](https://en.wikipedia.org/wiki/Iterator_pattern). This is the [blog post](https://go.dev/blog/range-functions) explaining the feature. Here is an example of how you can use this feature:
 
-<!-- add link to go 1.24 release notes and video -->
+```go
+func Flatten[T any, S ~[]T](seq iter.Seq2[S, error]) iter.Seq2[T, error] {
+	return func(yield func(T, error) bool) {
+		for vs, err := range seq {
+			if err != nil {
+				var zero T
+				yield(zero, err)
+				return
+			}
+			for _, v := range vs {
+				if !yield(v, nil) {
+					return
+				}
+			}
+		}
+	}
+}
+```
 
-        - range over function
+the above example is from a colleague contribution to (parquet-go)[https://github.com/parquet-go/parquet-go/pull/162/files]. It allow for reading generic types from a parquet file and to set a zero value if there is an error.
