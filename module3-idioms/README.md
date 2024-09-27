@@ -94,7 +94,9 @@ type ReadWriter interface {
 }
 ```
 
-That means that if a struct is to implemente the `io.ReadWriter` interface, it must implement the `Read` and `Write` methods. This is a great way to add a set of methods to a struct without redefine any dependencies.
+That means that if a struct is to implements the `io.ReadWriter` interface, it must implement the `Read()` and `Write()` methods from the `Reader` and `Writer` interfaces. This is a great way to add a set of methods to a struct without redefine any dependencies.
+
+Notice that in Go, the pattern for naming interfaces is to end the name with `er`. This is not a rule enforced by the compiler, but it is a common pattern in the Go community. This is because interfaces are used to define a set of methods that perform an action. The `er` suffix is a common way to denote that the action associated with the methods.
 
 Another great feature this unlocks is struct mocking for tests, but we will talk about that in the next module.
 
